@@ -1,0 +1,37 @@
+{
+	"name":"tweets",
+	"description":"Simple Streaming Twitter",
+	"version":"0.0.1",
+   "main": "server.js",
+   "config" : { 
+   "port" : "8090",
+   "watchList":"priceline",
+   "storageName":"tweets_priceline",
+   "watchIndex" : "1"
+ },
+  "scripts": {
+    "watch": "watchify server.js -o public/js/bundle.js -v",
+    "browserify": "browserify server.js | uglifyjs > public/js/bundle.js",
+    "build": "npm run browserify ",
+    "start" : "nodemon server.js"
+  },
+	"dependencies":
+	{
+		"express":"4.x.x",
+		"twit":"*",
+		"socket.io":"*",
+		"mongoose": "^4.2.6"
+	},
+  "devDependencies": {
+    "browserify": "~6.0.3",
+    "nodemon": "^1.2.1",
+    "reactify": "~1.1.1",
+    "uglify-js": "~2.4.15",
+    "watchify": "^3.1.1"
+  },
+  "browserify": {
+    "transform": [
+      "reactify"
+    ]
+  }
+}
