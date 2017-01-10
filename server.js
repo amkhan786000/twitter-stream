@@ -60,6 +60,25 @@ app.post("/search", function(req, res) {
     });
 });
 
+
+app.get("/add", function(req, res) {
+  res.sendfile('./views/add.html');
+});
+
+app.post("/add", function(req, res) {
+  db.collection('textstore').insert({
+    document: req.body.newDocument,
+    created: new Date()
+  }, function(err, result) {
+    if (err == null) {
+      res.sendfile("./views/add.html");
+    } else {
+      res.send("Error:" + err);
+    }
+  });
+});
+
+
 function pagelist(items) {
   result = "<html><body><ul>";
   items.forEach(function(tweet) {
