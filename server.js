@@ -11,7 +11,7 @@ var express = require('express')
   , assert = require('assert');
 
 var Tweet = require('./models/Tweet');
-
+const util = require('util');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -21,7 +21,7 @@ app.use(bodyParser.urlencoded({
 server.listen(process.env.npm_package_config_port);
 console.log("Server Started for watchList:"+process.env.npm_package_config_watchList+", storageName:"+process.env.npm_package_config_storageName+", watchIndex:"+process.env.npm_package_config_watchIndex)
 app.use(express.static(__dirname + '/public'));
-
+//app.use('/static', express.static('public'));
 // Connect to our mongo database
 mongoose.connect('mongodb://localhost:27017/pcln_twitter_feed');
 
@@ -43,7 +43,7 @@ io.sockets.on('connection', function (socket) {
 
 
  app.get('/', function (req, res) {
-  res.sendFile(__dirname + '/public/index.html');
+  res.sendFile(__dirname + '/public/views/index.html');
 });
 
 
@@ -52,17 +52,19 @@ app.get("/search", function(req, res) {
 });
 
 app.post("/search", function(req, res) {
-  Tweet.getTweets(req.params.page, req.params.skip, function(tweets) {
+  //console.log("Search Text: "+req.body.searchtext);
+  //console.log(util.inspect(req.body, false, null))
+  Tweet.getTweets(req.body.searchtext,req.params.page, req.params.skip, function(tweets) {
 
       // Render as JSON
-      res.send(pagelist(tweets));
+      res.send(tweets);
 
     });
 });
 
 
 app.get("/add", function(req, res) {
-  res.sendfile('./views/add.html');
+  res.sendfile('/public/views/add.html');
 });
 
 app.post("/add", function(req, res) {
@@ -71,7 +73,7 @@ app.post("/add", function(req, res) {
     created: new Date()
   }, function(err, result) {
     if (err == null) {
-      res.sendfile("./views/add.html");
+      res.sendfile("/public/views/add.html");
     } else {
       res.send("Error:" + err);
     }

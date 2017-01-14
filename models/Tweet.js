@@ -20,14 +20,16 @@ function Tweet(tweetObj, expId){
 }
 
 // Create a static getTweets method to return tweet data from the db
-schema.statics.getTweets = function(page, skip, callback) {
-
+schema.statics.getTweets = function(txtSearch,page, skip, callback) {
   var tweets = [],
       start = (page * 10) + (skip * 1);
-
+console.log(txtSearch);
   // Query the db, using skip and limit to achieve page chunks
-  Tweet.find({},'twid active author avatar body date screenname',{skip: start, limit: 1000}).sort({date: 'desc'}).exec(function(err,docs){
+  Tweet.find({body: new RegExp(txtSearch, 'i')} ,'body date',{skip: start, limit: 100}).sort({date: 'desc'}).exec(function(err,docs){
 
+ if(err) {
+  console.log(err);
+ }
     // If everything is cool...
     if(!err) {
       tweets = docs;  // We got tweets

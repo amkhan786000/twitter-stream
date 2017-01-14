@@ -1,9 +1,58 @@
 
-<html>
-<body>
-  <form method="post">
-   <input type="text" size="80" name="query"></textarea>
-   <input type="submit" value="Search" class="submitButton">
-</form>
+<link rel="stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="../css/style.css">
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.js"></script>
+   <script type="text/javascript">
+   $(document).ready(function(){
+		$( "#submitButton" ).click(function() {
+			//alert();
+			var postData = {};
+			postData.searchtext = $("#txtsearch").val();
+			$.ajax({
+			    type: "POST",
+			    url: "/search",
+			    data : postData,
+				dataType: 'json',
+			    success: function (data) { 
+			    	$('.timeline').empty();
+			        $.each(data, function(index, tweet) {
+			           $('.timeline').prepend("<li><div class=\"timeline-panel\" style=\"background-color:white;color:black\"><div class=\"timeline-heading\"><p><small class=\"text-muted\"><i class=\"glyphicon glyphicon-time\"></i> on "+formatDate(tweet.date)+" via Twitter</small></p></div><div class=\"timeline-body\"> "+tweet.body+"</div></div></li>").slideDown();
+			        });
+			    },
+			    error: function(result) { alert(result.status + ' ' + result.statusText); }
+			});
+		});
+	});
+
+  
+
+function formatDate(dates){
+	var date = new Date(dates);
+	return (date.getMonth() + 1) + '/' + date.getDate() + '/' +  date.getFullYear();
+}
+
+
+
+   </script>
+ 
+  <body style="background-image: url('img/photo-aruba.jpg');   background-repeat:no-repeat;background-position:0px -30px;color:white;background-color:white;">
+<div class="container" >
+    <div class="page-header">
+        <h1 id="timeline">
+        	<form id="searchForm">
+        	<div class="form-group">
+  				<input type="txtsearch" class="form-control" id="txtsearch" placeholder="Search Tweet">  				
+			</div>
+			<input type="button" class="btn btn-primary" id="submitButton" value="Search" size="10">
+			</form>
+        </h1>
+    </div>
+    <ul class="timeline">
+
+ </ul>
+</div> 
+ <div id="tweetd"></div>
+</div>
+</body>
 </body>
 </html>
